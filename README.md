@@ -1,0 +1,1 @@
+This repository contains my exercise submissions for the Full Stack Open course by the University of Helsinki. The course provided comprehensive coverage of modern web development practices, and this repository documents my progress and completed exercises.
