@@ -1,48 +1,56 @@
-import { useState, useEffect } from 'react'
-import Filter from './Components/Filter'
-import Persons from './Components/Persons'
-import PersonForm from './Components/PersonForm'
-import personsService from './services/persons'
+import { useState, useEffect } from "react";
+import Filter from "./Components/Filter";
+import Persons from "./Components/Persons";
+import PersonForm from "./Components/PersonForm";
+import personsService from "./services/persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([])
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [filter, setFilter] = useState('')
+  const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    personsService
-      .getAll()
-      .then(response => {
-        setPersons(response.data)
-      })
-  }, [])
+    personsService.getAll().then((response) => {
+      setPersons(response.data);
+    });
+  }, []);
 
   const addPerson = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    if (persons.some(p => p.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      return
+    if (persons.some((p) => p.name === newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
     }
 
     const personObject = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+    };
+
+    personsService.create(personObject).then((response) => {
+      setPersons(persons.concat(response.data));
+      setNewName("");
+      setNewNumber("");
+    });
+  };
+
+  const handleDelete = (id, name) => {
+    const ok = window.confirm(`Delete ${name}?`);
+
+    if (!ok) {
+      return;
     }
 
-    personsService
-      .create(personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
-        setNewName('')
-        setNewNumber('')
-      })
-  }
+    personsService.remove(id).then(() => {
+      setPersons(persons.filter((person) => person.id !== id));
+    });
+  };
 
-  const personsToShow = persons.filter(person =>
-    person.name.includes(filter)
-  )
+  const personsToShow = persons.filter((person) =>
+    person.name.includes(filter),
+  );
 
   return (
     <div>
@@ -65,9 +73,9 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleDelete={handleDelete} />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
