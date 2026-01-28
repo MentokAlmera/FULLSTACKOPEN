@@ -28,7 +28,10 @@ const App = () => {
         />
       </div>
 
-      <Countries countries={filteredCountries} />
+      <Countries
+        countries={filteredCountries}
+        setFilter={setFilter}
+      />
     </div>
   )
 }

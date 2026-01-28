@@ -3,8 +3,8 @@ const Country = ({ country }) => {
     <div>
       <h1>{country.name.common}</h1>
 
-      <p>capital {country.capital?.[0]}</p>
-      <p>area {country.area}</p>
+      <div>capital {country.capital?.[0]}</div>
+      <div>area {country.area}</div>
 
       <h3>languages:</h3>
       <ul>
