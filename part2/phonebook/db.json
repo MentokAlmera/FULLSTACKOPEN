@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": "2"
-    },
-    {
       "name": "Dan Abramov",
       "number": "12-43-234345",
       "id": "3"
@@ -16,39 +11,9 @@
       "id": "4"
     },
     {
-      "id": "2473",
-      "name": "ioi",
-      "number": "jkjk"
-    },
-    {
-      "id": "fb95",
-      "name": "yuyu",
-      "number": "uyuy"
-    },
-    {
-      "id": "311c",
-      "name": "uyuy",
-      "number": "uyuy"
-    },
-    {
-      "id": "8f9a",
-      "name": "trtr",
-      "number": "trtr"
-    },
-    {
-      "id": "0606",
-      "name": "Almra",
-      "number": "099999"
-    },
-    {
-      "id": "0712",
-      "name": "trtrt",
-      "number": "trtr"
-    },
-    {
-      "id": "be77",
-      "name": "fdf",
-      "number": "fdfd"
+      "id": "0338",
+      "name": "",
+      "number": ""
     }
   ]
 }
