@@ -12,11 +12,16 @@ app.use(cors())
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-app.use(helmet({
-  contentSecurityPolicy: false
-}))
-
-
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      connectSrc: ["'self'"],
+    },
+  })
+)
 
 app.use(express.static(path.join(__dirname, 'dist')))
 
@@ -29,20 +34,7 @@ let persons = [
 
 const generateId = () => Math.floor(Math.random() * 1000000).toString()
 
-app.get('/info', (req, res) => {
-  const date = new Date()
-  const count = persons.length
-  res.send(`
-    <div>
-      <p>Phonebook has info for ${count} people</p>
-      <p>${date}</p>
-    </div>
-  `)
-})
-
-app.get('/api/persons', (req, res) => {
-  res.json(persons)
-})
+app.get('/api/persons', (req, res) => res.json(persons))
 
 app.get('/api/persons/:id', (req, res) => {
   const person = persons.find(p => p.id === req.params.id)
@@ -50,36 +42,38 @@ app.get('/api/persons/:id', (req, res) => {
   else res.status(404).json({ error: 'Person not found' })
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-  persons = persons.filter(p => p.id !== req.params.id)
-  res.status(204).end()
-})
-
 app.post('/api/persons', (req, res) => {
   const { name, number } = req.body
 
   if (!name) return res.status(400).json({ error: 'name is missing' })
   if (!number) return res.status(400).json({ error: 'number is missing' })
-  if (persons.some(p => p.name === name)) return res.status(400).json({ error: 'name must be unique' })
+  if (persons.some(p => p.name === name))
+    return res.status(400).json({ error: 'name must be unique' })
 
   const newPerson = { id: generateId(), name, number }
   persons = persons.concat(newPerson)
   res.json(newPerson)
 })
 
-app.use((req, res, next) => {
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
-  } else {
-    next()
-  }
+app.delete('/api/persons/:id', (req, res) => {
+  persons = persons.filter(p => p.id !== req.params.id)
+  res.status(204).end()
 })
 
-app.use((req, res) => {
-  res.status(404).json({ error: 'unknown endpoint' })
+app.get('/info', (req, res) => {
+  const date = new Date()
+  res.send(`
+    <div>
+      <p>Phonebook has info for ${persons.length} people</p>
+      <p>${date}</p>
+    </div>
+  `)
+})
+app.use((req, res) => res.status(404).json({ error: 'unknown endpoint' }))
+
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
 })
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
