@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3001/api/persons'
+const baseUrl = 'https://fullstackopen-l7la.onrender.com/api/persons'
 
 const getAll = () => axios.get(baseUrl)
 const create = newObject => axios.post(baseUrl, newObject)
