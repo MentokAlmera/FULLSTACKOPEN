@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
   {
     id: "1",
@@ -24,6 +26,11 @@ let persons = [
   }
 ]
 
+const generateId = () => {
+  return Math.floor(Math.random() * 1000000).toString()
+}
+
+
 app.delete('/api/persons/:id', (req, res) => {
   const id = req.params.id
 
@@ -35,6 +42,31 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
+})
+
+app.get('/api/persons/:id', (req, res) => {
+  const id = req.params.id
+  const person = persons.find(p => p.id === id)
+
+  if (person) {
+    res.json(person)
+  } else {
+    res.status(404).end()
+  }
+})
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+
+  const newPerson = {
+    id: generateId(),
+    name: body.name,
+    number: body.number
+  }
+
+  persons = persons.concat(newPerson)
+
+  res.json(newPerson)
 })
 
 app.get('/info', (req, res) => {
@@ -49,16 +81,7 @@ app.get('/info', (req, res) => {
   `)
 })
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = req.params.id
-  const person = persons.find(p => p.id === id)
 
-  if (person) {
-    res.json(person)
-  } else {
-    res.status(404).end()
-  }
-})
 
 const PORT = 3001
 app.listen(PORT, () => {
