@@ -12,16 +12,11 @@ app.use(cors())
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      connectSrc: ["'self'"],
-    },
-  })
-)
+app.use(helmet({
+  contentSecurityPolicy: false
+}))
+
+
 
 app.use(express.static(path.join(__dirname, 'dist')))
 
