@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
@@ -22,6 +23,8 @@ app.use(
   })
 )
 
+app.use(express.static(path.join(__dirname, 'dist')))
+
 let persons = [
   { id: "1", name: "Arto Hellas", number: "040-123456" },
   { id: "2", name: "Ada Lovelace", number: "39-44-5323523" },
@@ -30,13 +33,6 @@ let persons = [
 ]
 
 const generateId = () => Math.floor(Math.random() * 1000000).toString()
-
-app.get('/', (req, res) => {
-  res.send(`
-    <h1>Phonebook backend is running!</h1>
-    <p>Use <a href="/api/persons">/api/persons</a> or <a href="/info">/info</a></p>
-  `)
-})
 
 app.get('/info', (req, res) => {
   const date = new Date()
@@ -74,6 +70,14 @@ app.post('/api/persons', (req, res) => {
   const newPerson = { id: generateId(), name, number }
   persons = persons.concat(newPerson)
   res.json(newPerson)
+})
+
+app.use((req, res, next) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
+  } else {
+    next()
+  }
 })
 
 app.use((req, res) => {
