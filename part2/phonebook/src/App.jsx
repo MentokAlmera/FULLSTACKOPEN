@@ -6,6 +6,7 @@ import Notification from "./Components/Notification";
 import personsService from "./services/persons";
 import "./index.css";
 
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
@@ -26,36 +27,35 @@ const App = () => {
     const existingPerson = persons.find((p) => p.name === newName);
 
     if (existingPerson) {
-      const confirmUpdate = window.confirm(
-        `${newName} is already added to phonebook, replace the old number with a new one?`,
-      );
+       alert(`${newName} is already added to the phonebook`)
+       return
+       
+      // if (confirmUpdate) {
+      //   const updatedPerson = { ...existingPerson, number: newNumber };
 
-      if (confirmUpdate) {
-        const updatedPerson = { ...existingPerson, number: newNumber };
+      //   personsService
+      //     .update(existingPerson.id, updatedPerson)
+      //     .then((response) => {
+      //       setPersons(
+      //         persons.map((p) =>
+      //           p.id !== existingPerson.id ? p : response.data,
+      //         ),
+      //       );
+      //       setNewName("");
+      //       setNewNumber("");
 
-        personsService
-          .update(existingPerson.id, updatedPerson)
-          .then((response) => {
-            setPersons(
-              persons.map((p) =>
-                p.id !== existingPerson.id ? p : response.data,
-              ),
-            );
-            setNewName("");
-            setNewNumber("");
+      //       setMessage(`Updated ${response.data.name}`);
+      //       setTimeout(() => setMessage(null), 5000);
+      //     })
+      //     .catch((error) => {
+      //       setErrorMessage(
+      //         `Information of ${existingPerson.name} has already been removed from server`,
+      //       );
+      //       setTimeout(() => setErrorMessage(null), 5000);
 
-            setMessage(`Updated ${response.data.name}`);
-            setTimeout(() => setMessage(null), 5000);
-          })
-          .catch((error) => {
-            setErrorMessage(
-              `Information of ${existingPerson.name} has already been removed from server`,
-            );
-            setTimeout(() => setErrorMessage(null), 5000);
-
-            setPersons(persons.filter((p) => p.id !== existingPerson.id));
-          });
-      }
+      //       setPersons(persons.filter((p) => p.id !== existingPerson.id));
+      //     });
+      // }
       return;
     }
 
